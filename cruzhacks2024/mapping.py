@@ -86,8 +86,8 @@ def find_clean(px, py, dest_x, dest_y):
 
 # function to find the closest pixel to the current one that is the same shade (similar shade = similar topography)
 def find_next_william(im, px, py, ex, ey, base_d):
-    d = 0
-    gravity = 2
+    base_d = dist(px, py, ex, ey)
+    gravity = 0.015
     backtrack = -0.01
 
     points = find_clean(px, py, ex, ey)
@@ -96,20 +96,21 @@ def find_next_william(im, px, py, ex, ey, base_d):
     
     # assign a default that isnt already used (checks how many available points surround the current one)
     new_p = random.choice(points)
-    d = dist(new_p[0], new_p[1], ex, ey)/base_d
+    d = dist(new_p[0], new_p[1], ex, ey)-base_d
+    
     new_gradient = abs(im[new_p[0], new_p[1], 0] - im[px, py, 0])
     new_score = new_gradient+d*gravity+len(find_clean(new_p[0], new_p[1], ex, ey))*backtrack
 
     # chooses best point to continue the path
     for p in points:
         gradient = abs(im[p[0], p[1], 0] - im[px, py, 0])
-        d = dist(p[0], p[1], ex, ey)/base_d
+        d = dist(p[0], p[1], ex, ey)-base_d
         score = gradient+d*gravity+len(find_clean(p[0], p[1], ex, ey))*backtrack
         if(score < new_score): 
             if(tuple(p) not in used_pix):
                 new_p = p
                 new_gradient = abs(im[new_p[0], new_p[1], 0] - im[px, py, 0])
-                d = dist(new_p[0], new_p[1], ex, ey)/base_d
+                d = dist(new_p[0], new_p[1], ex, ey)-base_d
                 new_score = new_gradient+(d*gravity)+len(find_clean(new_p[0], new_p[1], ex, ey))*backtrack
     used_pix[tuple(new_p)] = True
     return new_p
@@ -142,9 +143,9 @@ def route(im, sx, sy, ex, ey):
             i += 1
         else:
             i -= 1
-    im[p[0], p[1], 0] = 0
-    im[p[0], p[1], 1] = 1 
-    im[p[0], p[1], 2] = 0
+    im[sx, sy, 0] = 0
+    im[sx, sy, 1] = 1 
+    im[sx, sy, 2] = 0
 
     im[ex, ey, 0] = 0
     im[ex, ey, 1] = 0 
@@ -152,9 +153,9 @@ def route(im, sx, sy, ex, ey):
     imsave("trail_" + path, im)
 
 # maps the route 
-#route(image, 0, 0, image.shape[0]-1, image.shape[1]-1)
+route(image, 0, 0, image.shape[0]-1, image.shape[1]-1)
 #route(image, 0, 0, 0, image.shape[1]-1)
-route(image, 0, 0, image.shape[0]-1, 0)
+#route(image, 0, 0, image.shape[0]-1, 0)
 #route(image, random.randrange(image.shape[0]), 
 #      random.randrange(image.shape[1]), 
 #      random.randrange(image.shape[0]), 
