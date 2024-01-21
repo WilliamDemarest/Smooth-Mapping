@@ -123,7 +123,7 @@ def route(im, sx, sy, ex, ey):
     i = 0
     color_up = True
     while(True):
-        if(i>1000):
+        if(i>5000):
             break
         p = find_next_william(im, p[0], p[1], ex, ey)
         if(np.isclose(p[0], ex) and np.isclose(p[1], ey)):
@@ -150,13 +150,17 @@ def route(im, sx, sy, ex, ey):
     imsave("trail_" + path, im)
 
 # maps the route 
-#route(image, 0, 0, image.shape[0]-1, image.shape[1]-1)
+
+# From top left to another corner:
+route(image, 0, 0, image.shape[0]-1, image.shape[1]-1)
 #route(image, 0, 0, 0, image.shape[1]-1)
 #route(image, 0, 0, image.shape[0]-1, 0)
-route(image, random.randrange(image.shape[0]), 
-      random.randrange(image.shape[1]), 
-      random.randrange(image.shape[0]), 
-      random.randrange(image.shape[1]))
+    
+# Random points:
+#route(image, random.randrange(image.shape[0]), 
+#      random.randrange(image.shape[1]), 
+#      random.randrange(image.shape[0]), 
+#      random.randrange(image.shape[1]))
 
 # displays the finished route
 imsave("trail_" + path, image)
