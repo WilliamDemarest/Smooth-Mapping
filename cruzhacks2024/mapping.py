@@ -2,13 +2,24 @@
 ### It uses the grayscale shade of pixels to map the least steep, quickest path to a certain destination, which will prevent people from getting lost.
 ### It will also help prevent the destruction of natural areas by trailblazing, whether intended or inadvertent.
 import sys
+import argparse
 import numpy as np
+import os
 from matplotlib.pyplot import imread, imsave
 import random
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Smooth mapping code")
+    parser.add_argument("--input_map", "-m", type=str, required=True,
+                        help="Path to the input map file")
+    args = parser.parse_args()
+    if not os.path.exists(args.input_map):
+        raise FileNotFoundError(f"{args.input_map} doesn't exists!")
+    return args
 
+args = parse_args()
 # read png file (topographical image)
-path = 'map1.png'
+path = args.input_map
 image = imread(path)
 
 print(image.shape)
